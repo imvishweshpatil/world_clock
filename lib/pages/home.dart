@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
-
   @override
-  State<Home> createState() => _HomeState();
+  _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+
   Map data = {};
+
+//  @override
+//  void initState() {
+//    super.initState();
+//  }
 
   @override
   Widget build(BuildContext context) {
-    // Safely retrieve the arguments and handle null values
-    final arguments = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
 
-    if (arguments != null) {
-      data = arguments;
+    final routeData = ModalRoute.of(context)?.settings.arguments;
+    if (routeData != null && routeData is Map) {
+      data = data.isNotEmpty ? data : routeData as Map;
     }
 
-    //print(data);
-
-    //set background
+    // set background image
     String bgImage = data['isDaytime'] ? 'day.png' : 'night.png';
     Color bgColor = data['isDaytime'] ? Colors.blue : Colors.indigo[700] ?? Colors.indigo;
 
@@ -30,56 +31,62 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/$bgImage'),
-              fit: BoxFit.cover,
-            )
+              image: DecorationImage(
+                image: AssetImage('assets/$bgImage'),
+                fit: BoxFit.cover,
+              )
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 120.0, 0, 0),
             child: Column(
               children: <Widget>[
                 ElevatedButton.icon(
+                  onPressed: () async {
+                    dynamic result = await Navigator.pushNamed(context, '/location');
+                    if(result != null){
+                      setState(() {
+                        data = {
+                          'time': result['time'],
+                          'location': result['location'],
+                          'isDaytime': result['isDaytime'],
+                          'flag': result['flag']
+                        };
+                      });
+                    }
+                  },
                   icon: Icon(
                     Icons.edit_location,
-                    color: Colors.grey[300],
+                    color: Colors.grey[900],
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/location');
-                  },
                   label: Text(
                     'Edit Location',
                     style: TextStyle(
-                      color: Colors.grey[300],
+                      color: Colors.grey[900],
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       data['location'],
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 28.0,
                         letterSpacing: 2.0,
                         color: Colors.white,
                       ),
-                    )
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.0),
                 Text(
-                  data['time'],
-                  style: TextStyle(
-                    fontSize: 55,
-                    color: Colors.white,
-                  ),
-                )
+                    data['time'],
+                    style: TextStyle(
+                        fontSize: 66.0,
+                        color: Colors.white
+                    )
+                ),
               ],
             ),
           ),
