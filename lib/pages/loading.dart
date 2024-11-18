@@ -13,14 +13,13 @@ class _LoadingState extends State<Loading> {
   String time = 'loading';
 
   void setupWorldTime() async {
-    WorldTime instance = WorldTime(
-      location: 'London',
-      flag: 'uk.png',
-      url: 'London', // City name (must match an actual city in the API)
+    WorldTime instance = WorldTime(location: 'London', flag: 'uk.png', url: 'London', // City name (must match an actual city in the API)
     );
     await instance.getTime();
-    setState(() {
-      time = instance.time;
+    Navigator.pushReplacementNamed(context, '/home', arguments: {
+      'location': instance.location,
+      'flag' : instance.flag,
+      'time' : instance.time,
     });
   }
 
@@ -35,7 +34,7 @@ class _LoadingState extends State<Loading> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(50),
-        child: Text(time),
+        child: Text('loading'),
       )
     );
   }

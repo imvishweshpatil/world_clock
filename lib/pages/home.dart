@@ -8,8 +8,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Map data = {};
+
   @override
   Widget build(BuildContext context) {
+    // Safely retrieve the arguments and handle null values
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
+
+    if (arguments != null) {
+      data = arguments;
+    }
+
+    print(data);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -19,10 +30,10 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 Navigator.pushNamed(context, '/location');
               },
-              label: Text('Edit Location')
+              label: Text('Edit Location'),
             )
           ],
-        )
+        ),
       ),
     );
   }
